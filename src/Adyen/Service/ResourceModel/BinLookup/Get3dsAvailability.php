@@ -23,8 +23,8 @@ class Get3dsAvailability extends \Adyen\Service\AbstractResource
      */
     public function __construct($service)
     {
-        $this->endpoint = $service->getClient()->getConfig()->get('endpoint') .
-            '/pal/servlet/BinLookup/' . $service->getClient()->getApiBinLookupVersion() .
+        $this->endpoint = $service->getConfiguration()->getConfig()->get('endpoint') .
+            '/pal/servlet/BinLookup/' . $service->getConfiguration()->getApiBinLookupVersion() .
             '/get3dsAvailability';
         parent::__construct($service, $this->endpoint, $this->allowApplicationInfo);
     }

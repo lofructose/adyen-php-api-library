@@ -18,7 +18,7 @@ class OriginKeys extends \Adyen\Service\AbstractCheckoutResource
     public function __construct($service)
     {
         $this->endpoint = $this->getCheckoutEndpoint($service) .
-            '/' . $service->getClient()->getApiCheckoutUtilityVersion() . '/originKeys';
+            '/' . $service->getConfiguration()->getApiCheckoutUtilityVersion() . '/originKeys';
         parent::__construct($service, $this->endpoint);
     }
 }

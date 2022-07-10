@@ -23,8 +23,8 @@ class AdjustAuthorisation extends \Adyen\Service\AbstractResource
      */
     public function __construct($service)
     {
-        $this->endpoint = $service->getClient()->getConfig()->get('endpoint') .
-            '/pal/servlet/Payment/' . $service->getClient()->getApiPaymentVersion() .
+        $this->endpoint = $service->getConfiguration()->getConfig()->get('endpoint') .
+            '/pal/servlet/Payment/' . $service->getConfiguration()->getApiPaymentVersion() .
             '/adjustAuthorisation';
         parent::__construct($service, $this->endpoint, $this->allowApplicationInfo);
     }

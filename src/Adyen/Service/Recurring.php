@@ -22,20 +22,15 @@ class Recurring extends \Adyen\Service
     /**
      * Recurring constructor.
      *
-     * @param \Adyen\Client $client
+     * @param \Adyen\APIConfiguration $APIConfiguration
      * @throws \Adyen\AdyenException
      */
-    public function __construct(\Adyen\Client $client)
+    public function __construct(\Adyen\APIConfiguration $APIConfiguration)
     {
-        parent::__construct($client);
+        parent::__construct($APIConfiguration);
         $this->listRecurringDetails = new \Adyen\Service\ResourceModel\Recurring\ListRecurringDetails($this);
         $this->notifyShopper = new \Adyen\Service\ResourceModel\Recurring\NotifyShopper($this);
-
-        $this->disable = new \Adyen\Service\ResourceModel\Recurring\Disable(
-            $this,
-            $this->getClient()->getConfig()->get('endpoint') . '/disable',
-            array('merchantAccount', 'shopperReference')
-        );
+        $this->disable = new \Adyen\Service\ResourceModel\Recurring\Disable($this);
     }
 
     /**

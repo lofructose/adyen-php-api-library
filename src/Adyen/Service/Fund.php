@@ -37,12 +37,12 @@ class Fund extends \Adyen\Service
 
     /**
      * Fund constructor.
-     * @param \Adyen\Client $client
+     * @param \Adyen\APIConfiguration $APIConfiguration
      * @throws \Adyen\AdyenException
      */
-    public function __construct(\Adyen\Client $client)
+    public function __construct(\Adyen\APIConfiguration $APIConfiguration)
     {
-        parent::__construct($client);
+        parent::__construct($APIConfiguration);
 
         $this->payoutAccountHolder = new \Adyen\Service\ResourceModel\Fund\PayoutAccountHolder($this);
         $this->accountHolderBalance = new \Adyen\Service\ResourceModel\Fund\AccountHolderBalance($this);

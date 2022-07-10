@@ -32,9 +32,9 @@ class DisputeService extends \Adyen\Service
     /**
      * @inheritDoc
      */
-    public function __construct(\Adyen\Client $client)
+    public function __construct(\Adyen\APIConfiguration $APIConfiguration)
     {
-        parent::__construct($client);
+        parent::__construct($APIConfiguration);
         $this->retrieveApplicableDefenseReasons = new RetrieveApplicableDefenseReasons($this);
         $this->deleteDisputeDefenseDocument = new DeleteDisputeDefenseDocument($this);
         $this->defendDispute = new DefendDispute($this);
@@ -102,7 +102,7 @@ class DisputeService extends \Adyen\Service
      */
     public function getResourceURL($endpoint)
     {
-        return $this->getClient()->getConfig()->get('endpointDisputeService') . '/'
-            . $this->getClient()->getDisputeServiceVersion() . '/' . $endpoint;
+        return $this->getConfiguration()->getConfig()->get('endpointDisputeService') . '/'
+            . $this->getConfiguration()->getDisputeServiceVersion() . '/' . $endpoint;
     }
 }

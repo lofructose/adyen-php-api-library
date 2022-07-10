@@ -5,9 +5,9 @@ namespace Adyen;
 class Service
 {
     /**
-     * @var Client
+     * @var APIConfiguration
      */
-    private $client;
+    private $configuration;
 
     /**
      * @var bool
@@ -17,30 +17,28 @@ class Service
     /**
      * Service constructor.
      *
-     * @param Client $client
+     * @param APIConfiguration $APIConfiguration
      * @throws AdyenException
      */
-    public function __construct(\Adyen\Client $client)
+    public function __construct(\Adyen\APIConfiguration $APIConfiguration)
     {
-        $msg = null;
-
         // validate if client has all the configuration we need
-        if (!$client->getConfig()->get('environment')) {
+        if (!$APIConfiguration->getEnvironment()) {
             // throw exception
             $msg = 'The Client does not have a correct environment, use ' .
                 \Adyen\Environment::TEST . ' or ' . \Adyen\Environment::LIVE;
             throw new \Adyen\AdyenException($msg);
         }
 
-        $this->client = $client;
+        $this->configuration = $APIConfiguration;
     }
 
     /**
-     * @return Client
+     * @return APIConfiguration
      */
-    public function getClient()
+    public function getConfiguration(): APIConfiguration
     {
-        return $this->client;
+        return $this->configuration;
     }
 
     /**

@@ -18,7 +18,7 @@ class Orders extends \Adyen\Service\AbstractCheckoutResource
     public function __construct($service)
     {
         $this->endpoint = $this->getCheckoutEndpoint($service) .
-            '/' . $service->getClient()->getApiCheckoutVersion() . '/orders';
+            '/' . $service->getConfiguration()->getApiCheckoutVersion() . '/orders';
         parent::__construct($service, $this->endpoint);
     }
 }

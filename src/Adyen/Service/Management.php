@@ -51,12 +51,12 @@ class Management extends \Adyen\Service
 
     /**
      * Management constructor.
-     * @param \Adyen\Client $client
+     * @param \Adyen\APIConfiguration $APIConfiguration
      * @throws \Adyen\AdyenException
      */
-    public function __construct(\Adyen\Client $client)
+    public function __construct(\Adyen\APIConfiguration $APIConfiguration)
     {
-        parent::__construct($client);
+        parent::__construct($APIConfiguration);
         $this->merchantAccount = new MerchantAccount($this, null);
         $this->me = new Me($this, null);
         $this->companyAccount = new CompanyAccount($this, null);

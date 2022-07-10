@@ -2,8 +2,13 @@
 
 namespace Adyen\Service;
 
-class PosPayment extends \Adyen\ApiKeyAuthenticatedService
+use Adyen\ApiKeyAuthenticated;
+use Adyen\Service;
+
+class PosPayment extends Service
 {
+    use ApiKeyAuthenticated;
+
     /**
      * @var ResourceModel\Payment\TerminalCloudAPI
      */
@@ -27,12 +32,12 @@ class PosPayment extends \Adyen\ApiKeyAuthenticatedService
     /**
      * PosPayment constructor.
      *
-     * @param \Adyen\Client $client
+     * @param \Adyen\APIConfiguration $APIConfiguration
      * @throws \Adyen\AdyenException
      */
-    public function __construct(\Adyen\Client $client)
+    public function __construct(\Adyen\APIConfiguration $APIConfiguration)
     {
-        parent::__construct($client);
+        parent::__construct($APIConfiguration);
         $this->runTenderSync = new \Adyen\Service\ResourceModel\Payment\TerminalCloudAPI($this, false);
         $this->runTenderAsync = new \Adyen\Service\ResourceModel\Payment\TerminalCloudAPI($this, true);
         $this->connectedTerminals = new \Adyen\Service\ResourceModel\Payment\ConnectedTerminals($this);

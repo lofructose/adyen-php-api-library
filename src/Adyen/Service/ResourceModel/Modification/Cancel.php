@@ -23,8 +23,8 @@ class Cancel extends \Adyen\Service\AbstractResource
      */
     public function __construct($service)
     {
-        $this->endpoint = $service->getClient()->getConfig()->get('endpoint') .
-            '/pal/servlet/Payment/' . $service->getClient()->getApiPaymentVersion() . '/cancel';
+        $this->endpoint = $service->getConfiguration()->getConfig()->get('endpoint') .
+            '/pal/servlet/Payment/' . $service->getConfiguration()->getApiPaymentVersion() . '/cancel';
         parent::__construct($service, $this->endpoint, $this->allowApplicationInfo);
     }
 }

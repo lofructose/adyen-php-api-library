@@ -18,7 +18,7 @@ class PaymentsDetails extends \Adyen\Service\AbstractCheckoutResource
     public function __construct($service)
     {
         $this->endpoint = $this->getCheckoutEndpoint($service) .
-            '/' . $service->getClient()->getApiCheckoutVersion() . '/payments/details';
+            '/' . $service->getConfiguration()->getApiCheckoutVersion() . '/payments/details';
         parent::__construct($service, $this->endpoint);
     }
 }

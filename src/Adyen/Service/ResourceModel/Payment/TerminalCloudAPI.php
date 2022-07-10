@@ -32,9 +32,9 @@ class TerminalCloudAPI extends \Adyen\Service\AbstractResource
     public function __construct($service, $asynchronous)
     {
         if ($asynchronous) {
-            $this->endpoint = $service->getClient()->getConfig()->get('endpointTerminalCloud') . '/async';
+            $this->endpoint = $service->getConfiguration()->getConfig()->get('endpointTerminalCloud') . '/async';
         } else {
-            $this->endpoint = $service->getClient()->getConfig()->get('endpointTerminalCloud') . '/sync';
+            $this->endpoint = $service->getConfiguration()->getConfig()->get('endpointTerminalCloud') . '/sync';
         }
         parent::__construct($service, $this->endpoint, $this->allowApplicationInfo, $this->allowApplicationInfoPOS);
     }

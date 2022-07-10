@@ -3,7 +3,7 @@
 namespace Adyen\Service;
 
 use Adyen\AdyenException;
-use Adyen\Client;
+use Adyen\APIConfiguration;
 use Adyen\Service;
 use Adyen\Service\ResourceModel\Payout\Confirm;
 use Adyen\Service\ResourceModel\Payout\Decline;
@@ -65,12 +65,12 @@ class Payout extends Service
     /**
      * Payout constructor.
      *
-     * @param Client $client
+     * @param APIConfiguration $APIConfiguration
      * @throws AdyenException
      */
-    public function __construct(Client $client)
+    public function __construct(APIConfiguration $APIConfiguration)
     {
-        parent::__construct($client);
+        parent::__construct($APIConfiguration);
         $this->confirm = new Confirm($this);
         $this->decline = new Decline($this);
         $this->storeDetailsAndSubmit = new StoreDetailsAndSubmit($this);

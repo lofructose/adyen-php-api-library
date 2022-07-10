@@ -17,12 +17,12 @@ class BinLookup extends \Adyen\Service
     /**
      * BinLookup constructor.
      *
-     * @param \Adyen\Client $client
+     * @param \Adyen\Client $APIConfiguration
      * @throws \Adyen\AdyenException
      */
-    public function __construct(\Adyen\Client $client)
+    public function __construct(\Adyen\APIConfiguration $APIConfiguration)
     {
-        parent::__construct($client);
+        parent::__construct($APIConfiguration);
         $this->get3dsAvailability = new \Adyen\Service\ResourceModel\BinLookup\Get3dsAvailability($this);
         $this->getCostEstimate = new \Adyen\Service\ResourceModel\BinLookup\GetCostEstimate($this);
     }

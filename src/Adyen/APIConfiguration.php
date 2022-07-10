@@ -8,7 +8,7 @@ use Psr\Log\LoggerInterface;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
-class Client
+class APIConfiguration
 {
     const LIB_VERSION = "13.0.0";
     const LIB_NAME = "adyen-php-api-library";
@@ -51,9 +51,29 @@ class Client
     const MANAGEMENT_API = "v1";
 
     /**
-     * @var Config|ConfigInterface
+     * @var array
      */
-    private $config;
+    protected $data = [];
+
+    /**
+     * @var array
+     */
+    protected $allowedInput = ['array', 'json'];
+
+    /**
+     * @var string
+     */
+    protected $defaultInput = 'array';
+
+    /**
+     * @var array
+     */
+    protected $allowedOutput = ['array', 'json'];
+
+    /**
+     * @var string
+     */
+    protected $defaultOutput = 'array';
 
     /**
      * @var ClientInterface|null
@@ -66,34 +86,48 @@ class Client
     private $logger;
 
     /**
-     * Client constructor.
+     * Config constructor.
      *
-     * @param ConfigInterface|null $config
-     * @throws AdyenException
+     * @param null $params
      */
-    public function __construct($config = null)
+    public function __construct($params = null)
     {
-        if ($config === null) {
-            // Create config
-            $config = new Config();
+        if ($params && is_array($params)) {
+            foreach ($params as $key => $param) {
+                $this->data[$key] = $param;
+            }
         }
-
-        if (! $config instanceof ConfigInterface) {
-            throw new \Adyen\AdyenException(
-                'This config object is not supported,' .
-                ' you need to implement the ConfigInterface'
-            );
-        }
-
-        $this->config = $config;
     }
 
     /**
-     * @return Config|ConfigInterface
+     * Get a specific key value.
+     *
+     * @param string $key Key to retrieve.
+     *
+     * @return mixed Value of the key or NULL
      */
-    public function getConfig()
+    public function get(string $key)
     {
-        return $this->config;
+        return $this->data[$key] ?? null;
+    }
+
+    /**
+     * Set a key value pair
+     *
+     * @param string $key Key to set
+     * @param mixed $value Value to set
+     */
+    public function set(string $key, $value)
+    {
+        $this->data[$key] = $value;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getUsername()
+    {
+        return $this->data['username'] ?? null;
     }
 
     /**
@@ -103,7 +137,15 @@ class Client
      */
     public function setUsername($username)
     {
-        $this->config->set('username', $username);
+        $this->set('username', $username);
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getPassword()
+    {
+        return $this->data['password'] ?? null;
     }
 
     /**
@@ -113,7 +155,17 @@ class Client
      */
     public function setPassword($password)
     {
-        $this->config->set('password', $password);
+        $this->set('password', $password);
+    }
+
+    /**
+     * Get the Checkout API Key from the Adyen Customer Area
+     *
+     * @return mixed|null
+     */
+    public function getXApiKey()
+    {
+        return $this->data['x-api-key'] ?? null;
     }
 
     /**
@@ -123,7 +175,17 @@ class Client
      */
     public function setXApiKey($xApiKey)
     {
-        $this->config->set('x-api-key', $xApiKey);
+        $this->set('x-api-key', $xApiKey);
+    }
+
+    /**
+     * Get the http proxy configuration
+     *
+     * @return mixed|null
+     */
+    public function getHttpProxy()
+    {
+        return $this->data['http-proxy'] ?? null;
     }
 
     /**
@@ -133,7 +195,15 @@ class Client
      */
     public function setHttpProxy($proxy)
     {
-        $this->config->set('http-proxy', $proxy);
+        $this->set('http-proxy', $proxy);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getEnvironment()
+    {
+        return $this->data['environment'] ?? null;
     }
 
     /**
@@ -145,72 +215,60 @@ class Client
      *                                           menu in the Adyen Customer Area
      * @throws AdyenException
      */
-    public function setEnvironment($environment, $liveEndpointUrlPrefix = null)
+    public function setEnvironment(string $environment, ?string $liveEndpointUrlPrefix = null)
     {
-        if ($environment == \Adyen\Environment::TEST) {
-            $this->config->set('environment', \Adyen\Environment::TEST);
-            $this->config->set('endpoint', self::ENDPOINT_TEST);
-            $this->config->set('endpointDirectorylookup', self::ENDPOINT_TEST_DIRECTORY_LOOKUP);
-            $this->config->set('endpointTerminalCloud', self::ENDPOINT_TERMINAL_CLOUD_TEST);
-            $this->config->set('endpointCheckout', self::ENDPOINT_CHECKOUT_TEST);
-            $this->config->set('endpointNotification', self::ENDPOINT_NOTIFICATION_TEST);
-            $this->config->set('endpointAccount', self::ENDPOINT_ACCOUNT_TEST);
-            $this->config->set('endpointFund', self::ENDPOINT_FUND_TEST);
-            $this->config->set('endpointDisputeService', self::ENDPOINT_DISPUTE_SERVICE_TEST);
-            $this->config->set('endpointCustomerArea', self::ENDPOINT_CUSTOMER_AREA_TEST);
-            $this->config->set('endpointHop', self::ENDPOINT_HOP_TEST);
-            $this->config->set('endpointManagementApi', self::MANAGEMENT_API_TEST);
-        } elseif ($environment == \Adyen\Environment::LIVE) {
-            $this->config->set('environment', \Adyen\Environment::LIVE);
-            $this->config->set('endpointDirectorylookup', self::ENDPOINT_LIVE_DIRECTORY_LOOKUP);
-            $this->config->set('endpointTerminalCloud', self::ENDPOINT_TERMINAL_CLOUD_LIVE);
-            $this->config->set('endpointNotification', self::ENDPOINT_NOTIFICATION_LIVE);
-            $this->config->set('endpointAccount', self::ENDPOINT_ACCOUNT_LIVE);
-            $this->config->set('endpointFund', self::ENDPOINT_FUND_LIVE);
-            $this->config->set('endpointDisputeService', self::ENDPOINT_DISPUTE_SERVICE_LIVE);
-            $this->config->set('endpointCustomerArea', self::ENDPOINT_CUSTOMER_AREA_LIVE);
-            $this->config->set('endpointHop', self::ENDPOINT_HOP_LIVE);
-            $this->config->set('endpointManagementApi', self::MANAGEMENT_API_LIVE);
+        if (Environment::TEST === $environment) {
+            $this->set('environment', Environment::TEST);
+            $this->set('endpoint', self::ENDPOINT_TEST);
+            $this->set('endpointDirectoryLookup', self::ENDPOINT_TEST_DIRECTORY_LOOKUP);
+            $this->set('endpointTerminalCloud', self::ENDPOINT_TERMINAL_CLOUD_TEST);
+            $this->set('endpointCheckout', self::ENDPOINT_CHECKOUT_TEST);
+            $this->set('endpointNotification', self::ENDPOINT_NOTIFICATION_TEST);
+            $this->set('endpointAccount', self::ENDPOINT_ACCOUNT_TEST);
+            $this->set('endpointFund', self::ENDPOINT_FUND_TEST);
+            $this->set('endpointDisputeService', self::ENDPOINT_DISPUTE_SERVICE_TEST);
+            $this->set('endpointCustomerArea', self::ENDPOINT_CUSTOMER_AREA_TEST);
+            $this->set('endpointHop', self::ENDPOINT_HOP_TEST);
+            $this->set('endpointManagementApi', self::MANAGEMENT_API_TEST);
+        } elseif (Environment::LIVE === $environment) {
+            $this->set('environment', Environment::LIVE);
+            $this->set('endpointDirectoryLookup', self::ENDPOINT_LIVE_DIRECTORY_LOOKUP);
+            $this->set('endpointTerminalCloud', self::ENDPOINT_TERMINAL_CLOUD_LIVE);
+            $this->set('endpointNotification', self::ENDPOINT_NOTIFICATION_LIVE);
+            $this->set('endpointAccount', self::ENDPOINT_ACCOUNT_LIVE);
+            $this->set('endpointFund', self::ENDPOINT_FUND_LIVE);
+            $this->set('endpointDisputeService', self::ENDPOINT_DISPUTE_SERVICE_LIVE);
+            $this->set('endpointCustomerArea', self::ENDPOINT_CUSTOMER_AREA_LIVE);
+            $this->set('endpointHop', self::ENDPOINT_HOP_LIVE);
+            $this->set('endpointManagementApi', self::MANAGEMENT_API_LIVE);
 
             if ($liveEndpointUrlPrefix) {
-                $this->config->set(
+                $this->set(
                     'endpoint',
                     self::ENDPOINT_PROTOCOL . $liveEndpointUrlPrefix . self::ENDPOINT_LIVE_SUFFIX
                 );
-                $this->config->set(
+                $this->set(
                     'endpointCheckout',
                     self::ENDPOINT_PROTOCOL . $liveEndpointUrlPrefix . self::ENDPOINT_CHECKOUT_LIVE_SUFFIX
                 );
             } else {
-                $this->config->set('endpoint', self::ENDPOINT_LIVE);
-                $this->config->set('endpointCheckout', null); // not supported please specify unique identifier
+                $this->set('endpoint', self::ENDPOINT_LIVE);
+                $this->set('endpointCheckout', null); // not supported please specify unique identifier
             }
         } else {
             // environment does not exist
-            $msg = "This environment does not exist, use " .
-                \Adyen\Environment::TEST . ' or ' . \Adyen\Environment::LIVE;
+            $msg = 'This environment does not exist, use "' .
+                Environment::TEST . '" or "' . Environment::LIVE . '"';
             throw new \Adyen\AdyenException($msg);
         }
     }
 
     /**
-     * Set Request URl
-     *
-     * @param $url
+     * @return mixed|null
      */
-    public function setRequestUrl($url)
+    public function getMerchantAccount()
     {
-        $this->config->set('endpoint', $url);
-    }
-
-    /**
-     * Set directory lookup URL
-     *
-     * @param $url
-     */
-    public function setDirectoryLookupUrl($url)
-    {
-        $this->config->set('endpointDirectorylookup', $url);
+        return $this->data['merchantAccount'] ?? null;
     }
 
     /**
@@ -218,7 +276,15 @@ class Client
      */
     public function setMerchantAccount($merchantAccount)
     {
-        $this->config->set('merchantAccount', $merchantAccount);
+        $this->set('merchantAccount', $merchantAccount);
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getApplicationName()
+    {
+        return $this->data['applicationName'] ?? null;
     }
 
     /**
@@ -226,7 +292,15 @@ class Client
      */
     public function setApplicationName($applicationName)
     {
-        $this->config->set('applicationName', $applicationName);
+        $this->set('applicationName', $applicationName);
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getExternalPlatform()
+    {
+        return $this->data['externalPlatform'] ?? null;
     }
 
     /**
@@ -234,14 +308,19 @@ class Client
      *
      * @param string $name
      * @param string $version
-     * @param string $integrator
+     * @param string|null $integrator
      */
-    public function setExternalPlatform($name, $version, $integrator = "")
+    public function setExternalPlatform(string $name, string $version, ?string $integrator = "")
     {
-        $this->config->set(
-            'externalPlatform',
-            array('name' => $name, 'version' => $version, 'integrator' => $integrator)
-        );
+        $this->set('externalPlatform', ['name' => $name, 'version' => $version, 'integrator' => $integrator]);
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getAdyenPaymentSource()
+    {
+        return $this->data['adyenPaymentSource'] ?? null;
     }
 
     /**
@@ -250,9 +329,17 @@ class Client
      * @param string $name
      * @param string $version
      */
-    public function setAdyenPaymentSource($name, $version)
+    public function setAdyenPaymentSource(string $name, string $version)
     {
-        $this->config->set('adyenPaymentSource', array('name' => $name, 'version' => $version));
+        $this->set('adyenPaymentSource', ['name' => $name, 'version' => $version]);
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getMerchantApplication()
+    {
+        return $this->data['merchantApplication'] ?? null;
     }
 
     /**
@@ -261,9 +348,21 @@ class Client
      * @param string $name
      * @param string $version
      */
-    public function setMerchantApplication($name, $version)
+    public function setMerchantApplication(string $name, string $version)
     {
-        $this->config->set('merchantApplication', array('name' => $name, 'version' => $version));
+        $this->set('merchantApplication', ['name' => $name, 'version' => $version]);
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getInputType()
+    {
+        if (isset($this->data['inputType']) && in_array($this->data['inputType'], $this->allowedInput)) {
+            return $this->data['inputType'];
+        }
+
+        return $this->defaultInput;
     }
 
     /**
@@ -273,7 +372,19 @@ class Client
      */
     public function setInputType($value)
     {
-        $this->config->set('inputType', $value);
+        $this->set('inputType', $value);
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getOutputType()
+    {
+        if (isset($this->data['outputType']) && in_array($this->data['outputType'], $this->allowedOutput)) {
+            return $this->data['outputType'];
+        }
+
+        return $this->defaultOutput;
     }
 
     /**
@@ -283,7 +394,15 @@ class Client
      */
     public function setOutputType($value)
     {
-        $this->config->set('outputType', $value);
+        $this->set('outputType', $value);
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getTimeout()
+    {
+        return $this->data['timeout'] ?? null;
     }
 
     /**
@@ -291,7 +410,7 @@ class Client
      */
     public function setTimeout($value)
     {
-        $this->config->set('timeout', $value);
+        $this->set('timeout', $value);
     }
 
     /**

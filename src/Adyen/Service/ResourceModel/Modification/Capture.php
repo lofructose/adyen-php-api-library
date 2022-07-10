@@ -23,8 +23,8 @@ class Capture extends \Adyen\Service\AbstractResource
      */
     public function __construct($service)
     {
-        $this->endpoint = $service->getClient()->getConfig()->get('endpoint') .
-            '/pal/servlet/Payment/' . $service->getClient()->getApiPaymentVersion() . '/capture';
+        $this->endpoint = $service->getConfiguration()->getConfig()->get('endpoint') .
+            '/pal/servlet/Payment/' . $service->getConfiguration()->getApiPaymentVersion() . '/capture';
         parent::__construct($service, $this->endpoint, $this->allowApplicationInfo);
     }
 }

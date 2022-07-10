@@ -25,7 +25,7 @@ class Captures extends \Adyen\Service\AbstractCheckoutResource
     public function __construct($service)
     {
         $this->endpoint = $this->getCheckoutEndpoint($service) .
-            '/' . $service->getClient()->getApiCheckoutVersion() . '/payments/{paymentPspReference}/captures';
+            '/' . $service->getConfiguration()->getApiCheckoutVersion() . '/payments/{paymentPspReference}/captures';
         parent::__construct($service, $this->endpoint, $this->allowApplicationInfo);
     }
 }

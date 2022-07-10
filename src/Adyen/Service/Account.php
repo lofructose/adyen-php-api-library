@@ -81,12 +81,12 @@ class Account extends \Adyen\Service
 
     /**
      * Account constructor.
-     * @param \Adyen\Client $client
+     * @param \Adyen\APIConfiguration $APIConfiguration
      * @throws \Adyen\AdyenException
      */
-    public function __construct(\Adyen\Client $client)
+    public function __construct(\Adyen\APIConfiguration $APIConfiguration)
     {
-        parent::__construct($client);
+        parent::__construct($APIConfiguration);
 
         $this->checkAccountHolder = new \Adyen\Service\ResourceModel\Account\CheckAccountHolder($this);
         $this->createAccount = new \Adyen\Service\ResourceModel\Account\CreateAccount($this);

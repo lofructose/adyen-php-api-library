@@ -2,7 +2,7 @@
 
 namespace Adyen;
 
-class ApiKeyAuthenticatedService extends Service
+trait ApiKeyAuthenticated
 {
     /**
      * @var bool

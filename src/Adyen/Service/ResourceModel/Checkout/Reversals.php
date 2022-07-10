@@ -25,7 +25,7 @@ class Reversals extends \Adyen\Service\AbstractCheckoutResource
     public function __construct($service)
     {
         $this->endpoint = $this->getCheckoutEndpoint($service) .
-            '/' . $service->getClient()->getApiCheckoutVersion() . '/payments/{paymentPspReference}/reversals';
+            '/' . $service->getConfiguration()->getApiCheckoutVersion() . '/payments/{paymentPspReference}/reversals';
         parent::__construct($service, $this->endpoint, $this->allowApplicationInfo);
     }
 }

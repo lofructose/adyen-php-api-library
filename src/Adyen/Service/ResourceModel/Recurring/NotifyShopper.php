@@ -16,8 +16,8 @@ class NotifyShopper extends \Adyen\Service\AbstractResource
      */
     public function __construct($service)
     {
-        $this->endpoint = $service->getClient()->getConfig()->get('endpoint') .
-            '/pal/servlet/Recurring/' . $service->getClient()->getApiRecurringVersion() . '/notifyShopper';
+        $this->endpoint = $service->getConfiguration()->getConfig()->get('endpoint') .
+            '/pal/servlet/Recurring/' . $service->getConfiguration()->getApiRecurringVersion() . '/notifyShopper';
         parent::__construct($service, $this->endpoint);
     }
 }

@@ -17,7 +17,7 @@ class Directory extends \Adyen\Service\AbstractResource
      */
     public function __construct($service)
     {
-        $this->endpoint = $service->getClient()->getConfig()->get('endpointDirectorylookup');
+        $this->endpoint = $service->getConfiguration()->getConfig()->get('endpointDirectoryLookup');
         parent::__construct($service, $this->endpoint);
     }
 }

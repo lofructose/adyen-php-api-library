@@ -37,12 +37,12 @@ class Modification extends \Adyen\Service
     /**
      * Modification constructor.
      *
-     * @param \Adyen\Client $client
+     * @param \Adyen\APIConfiguration $APIConfiguration
      * @throws \Adyen\AdyenException
      */
-    public function __construct(\Adyen\Client $client)
+    public function __construct(\Adyen\APIConfiguration $APIConfiguration)
     {
-        parent::__construct($client);
+        parent::__construct($APIConfiguration);
         $this->cancel = new \Adyen\Service\ResourceModel\Modification\Cancel($this);
         $this->cancelOrRefund = new \Adyen\Service\ResourceModel\Modification\CancelOrRefund($this);
         $this->capture = new \Adyen\Service\ResourceModel\Modification\Capture($this);

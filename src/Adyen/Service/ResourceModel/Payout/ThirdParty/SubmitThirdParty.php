@@ -16,8 +16,8 @@ class SubmitThirdParty extends \Adyen\Service\AbstractResource
      */
     public function __construct($service)
     {
-        $this->endpoint = $service->getClient()->getConfig()->get('endpoint') .
-            '/pal/servlet/Payout/' . $service->getClient()->getApiPayoutVersion() . '/submitThirdParty';
+        $this->endpoint = $service->getConfiguration()->getConfig()->get('endpoint') .
+            '/pal/servlet/Payout/' . $service->getConfiguration()->getApiPayoutVersion() . '/submitThirdParty';
         parent::__construct($service, $this->endpoint);
     }
 }

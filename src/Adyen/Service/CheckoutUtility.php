@@ -2,8 +2,13 @@
 
 namespace Adyen\Service;
 
-class CheckoutUtility extends \Adyen\ApiKeyAuthenticatedService
+use Adyen\ApiKeyAuthenticated;
+use Adyen\Service;
+
+class CheckoutUtility extends Service
 {
+    use ApiKeyAuthenticated;
+
     /**
      * @var ResourceModel\CheckoutUtility\OriginKeys
      */
@@ -12,12 +17,12 @@ class CheckoutUtility extends \Adyen\ApiKeyAuthenticatedService
     /**
      * CheckoutUtility constructor.
      *
-     * @param \Adyen\Client $client
+     * @param \Adyen\APIConfiguration $APIConfiguration
      * @throws \Adyen\AdyenException
      */
-    public function __construct(\Adyen\Client $client)
+    public function __construct(\Adyen\APIConfiguration $APIConfiguration)
     {
-        parent::__construct($client);
+        parent::__construct($APIConfiguration);
         $this->originKeys = new \Adyen\Service\ResourceModel\CheckoutUtility\OriginKeys($this);
     }
 

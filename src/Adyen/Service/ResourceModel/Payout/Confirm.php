@@ -16,9 +16,9 @@ class Confirm extends \Adyen\Service\AbstractResource
      */
     public function __construct($service)
     {
-        $this->endpoint = $service->getClient()->getConfig()->get('endpoint') .
+        $this->endpoint = $service->getConfiguration()->getConfig()->get('endpoint') .
             '/pal/servlet/Payout/' .
-            $service->getClient()->getApiPayoutVersion() .
+            $service->getConfiguration()->getApiPayoutVersion() .
             '/confirm';
         parent::__construct($service, $this->endpoint);
     }

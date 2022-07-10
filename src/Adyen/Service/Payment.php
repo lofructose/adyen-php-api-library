@@ -22,12 +22,12 @@ class Payment extends \Adyen\Service
     /**
      * Payment constructor.
      *
-     * @param \Adyen\Client $client
+     * @param \Adyen\APIConfiguration $APIConfiguration
      * @throws \Adyen\AdyenException
      */
-    public function __construct(\Adyen\Client $client)
+    public function __construct(\Adyen\APIConfiguration $APIConfiguration)
     {
-        parent::__construct($client);
+        parent::__construct($APIConfiguration);
         $this->authorise = new \Adyen\Service\ResourceModel\Payment\Authorise($this);
         $this->authorise3D = new \Adyen\Service\ResourceModel\Payment\Authorise3D($this);
         $this->authorise3DS2 = new \Adyen\Service\ResourceModel\Payment\Authorise3DS2($this);

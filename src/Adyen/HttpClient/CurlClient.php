@@ -95,7 +95,7 @@ class CurlClient implements ClientInterface
      */
     public function requestPost(\Adyen\Service $service, $requestUrl, $params)
     {
-        $client = $service->getClient();
+        $client = $service->getConfiguration();
         $config = $client->getConfig();
         $logger = $client->getLogger();
         $username = $config->getUsername();
@@ -348,7 +348,7 @@ class CurlClient implements ClientInterface
 
     public function requestHttp(\Adyen\Service $service, $requestUrl, $params, $method, $requestOptions = null)
     {
-        $client = $service->getClient();
+        $client = $service->getConfiguration();
         $config = $client->getConfig();
         $logger = $client->getLogger();
         $username = $config->getUsername();

@@ -18,7 +18,7 @@ class PaymentMethodsBalance extends \Adyen\Service\AbstractCheckoutResource
     public function __construct($service)
     {
         $this->endpoint = $this->getCheckoutEndpoint($service) .
-            '/' . $service->getClient()->getApiCheckoutVersion() . '/paymentMethods/balance';
+            '/' . $service->getConfiguration()->getApiCheckoutVersion() . '/paymentMethods/balance';
         parent::__construct($service, $this->endpoint);
     }
 }

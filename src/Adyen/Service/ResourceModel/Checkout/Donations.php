@@ -25,7 +25,7 @@ class Donations extends \Adyen\Service\AbstractCheckoutResource
     public function __construct($service)
     {
         $this->endpoint = $this->getCheckoutEndpoint($service) .
-            '/' . $service->getClient()->getApiCheckoutVersion() . '/donations';
+            '/' . $service->getConfiguration()->getApiCheckoutVersion() . '/donations';
         parent::__construct($service, $this->endpoint, $this->allowApplicationInfo);
     }
 }

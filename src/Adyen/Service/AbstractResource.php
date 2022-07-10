@@ -50,8 +50,8 @@ abstract class AbstractResource
         $this->endpoint = $endpoint;
         $this->allowApplicationInfo = $allowApplicationInfo;
         $this->allowApplicationInfoPOS = $allowApplicationInfoPOS;
-        $this->managementEndpoint = $service->getClient()->getConfig()->get('endpointManagementApi')
-            . $service->getClient()->getManagementApiVersion();
+        $this->managementEndpoint = $service->getConfiguration()->get('endpointManagementApi')
+            . $service->getConfiguration()->getManagementApiVersion();
     }
 
     /**
@@ -65,19 +65,19 @@ abstract class AbstractResource
     public function request($params, $requestOptions = null)
     {
         // convert to PHP Array if type is inputType is json
-        if ($this->service->getClient()->getConfig()->getInputType() == 'json') {
+        if ($this->service->getConfiguration()->getInputType() == 'json') {
             $params = json_decode($params, true);
             if ($params === null && json_last_error() !== JSON_ERROR_NONE) {
                 $msg = 'The parameters in the request expect valid JSON but JSON error code found: ' .
                     json_last_error();
-                $this->service->getClient()->getLogger()->error($msg);
+                $this->service->getConfiguration()->getLogger()->error($msg);
                 throw new AdyenException($msg);
             }
         }
 
         if (!is_array($params)) {
             $msg = 'The parameter is not valid array';
-            $this->service->getClient()->getLogger()->error($msg);
+            $this->service->getConfiguration()->getLogger()->error($msg);
             throw new AdyenException($msg);
         }
 
@@ -96,8 +96,51 @@ abstract class AbstractResource
             }
         }
 
-        $curlClient = $this->service->getClient()->getHttpClient();
-        return $curlClient->requestJson($this->service, $this->endpoint, $params, $requestOptions);
+        $client = $this->service->getConfiguration()->getHttpClient();
+        return $client->requestJson($this->service, $this->endpoint, $params, $requestOptions);
+    }
+
+    /**
+     * @param $params
+     * @return mixed
+     * @throws AdyenException
+     */
+    public function requestPost($params)
+    {
+        // check if paramenters has a value
+        if (!$params) {
+            $msg = 'The parameters in the request are empty';
+            $this->service->getConfiguration()->getLogger()->error($msg);
+            throw new AdyenException($msg);
+        }
+
+        $client = $this->service->getConfiguration()->getHttpClient();
+        return $client->requestPost($this->service, $this->endpoint, $params);
+    }
+
+    /**
+     * @param $url
+     * @param $method
+     * @param array|null $params
+     * @return mixed
+     * @throws AdyenException
+     */
+    public function requestHttp($url, $method = 'get', array $params = null)
+    {
+        // check if rest api method has a value
+        if (!$method) {
+            $msg = 'The REST API method is empty';
+            $this->service->getConfiguration()->getLogger()->error($msg);
+            throw new AdyenException($msg);
+        }
+        // check if rest api method has a value
+        if (!$url) {
+            $msg = 'The REST API endpoint is empty';
+            $this->service->getConfiguration()->getLogger()->error($msg);
+            throw new AdyenException($msg);
+        }
+        $client = $this->service->getConfiguration()->getHttpClient();
+        return $client->requestHttp($this->service, $url, $params, $method);
     }
 
     /**
@@ -109,8 +152,8 @@ abstract class AbstractResource
     private function addDefaultParametersToRequest($params)
     {
         // check if merchantAccount is setup in client and request is missing merchantAccount then add it
-        if (!isset($params['merchantAccount']) && $this->service->getClient()->getConfig()->getMerchantAccount()) {
-            $params['merchantAccount'] = $this->service->getClient()->getConfig()->getMerchantAccount();
+        if (!isset($params['merchantAccount']) && $this->service->getConfiguration()->getMerchantAccount()) {
+            $params['merchantAccount'] = $this->service->getConfiguration()->getMerchantAccount();
         }
 
         return $params;
@@ -126,15 +169,15 @@ abstract class AbstractResource
     private function handleApplicationInfoInRequest($params)
     {
         // add/overwrite applicationInfo adyenLibrary even if it's already set
-        $params['applicationInfo']['adyenLibrary']['name'] = $this->service->getClient()->getLibraryName();
-        $params['applicationInfo']['adyenLibrary']['version'] = $this->service->getClient()->getLibraryVersion();
+        $params['applicationInfo']['adyenLibrary']['name'] = $this->service->getConfiguration()->getLibraryName();
+        $params['applicationInfo']['adyenLibrary']['version'] = $this->service->getConfiguration()->getLibraryVersion();
 
-        if ($adyenPaymentSource = $this->service->getClient()->getConfig()->getAdyenPaymentSource()) {
+        if ($adyenPaymentSource = $this->service->getConfiguration()->getAdyenPaymentSource()) {
             $params['applicationInfo']['adyenPaymentSource']['version'] = $adyenPaymentSource['version'];
             $params['applicationInfo']['adyenPaymentSource']['name'] = $adyenPaymentSource['name'];
         }
 
-        if ($externalPlatform = $this->service->getClient()->getConfig()->getExternalPlatform()) {
+        if ($externalPlatform = $this->service->getConfiguration()->getExternalPlatform()) {
             $params['applicationInfo']['externalPlatform']['version'] = $externalPlatform['version'];
             $params['applicationInfo']['externalPlatform']['name'] = $externalPlatform['name'];
 
@@ -143,7 +186,7 @@ abstract class AbstractResource
             }
         }
 
-        if ($merchantApplication = $this->service->getClient()->getConfig()->getMerchantApplication()) {
+        if ($merchantApplication = $this->service->getConfiguration()->getMerchantApplication()) {
             $params['applicationInfo']['merchantApplication']['version'] = $merchantApplication['version'];
             $params['applicationInfo']['merchantApplication']['name'] = $merchantApplication['name'];
         }
@@ -221,48 +264,5 @@ abstract class AbstractResource
             },
             $this->endpoint
         );
-    }
-      
-    /**
-     * @param $params
-     * @return mixed
-     * @throws AdyenException
-     */
-    public function requestPost($params)
-    {
-        // check if paramenters has a value
-        if (!$params) {
-            $msg = 'The parameters in the request are empty';
-            $this->service->getClient()->getLogger()->error($msg);
-            throw new AdyenException($msg);
-        }
-
-        $curlClient = $this->service->getClient()->getHttpClient();
-        return $curlClient->requestPost($this->service, $this->endpoint, $params);
-    }
-
-    /**
-     * @param $url
-     * @param $method
-     * @param array|null $params
-     * @return mixed
-     * @throws AdyenException
-     */
-    public function requestHttp($url, $method = 'get', array $params = null)
-    {
-        // check if rest api method has a value
-        if (!$method) {
-            $msg = 'The REST API method is empty';
-            $this->service->getClient()->getLogger()->error($msg);
-            throw new AdyenException($msg);
-        }
-        // check if rest api method has a value
-        if (!$url) {
-            $msg = 'The REST API endpoint is empty';
-            $this->service->getClient()->getLogger()->error($msg);
-            throw new AdyenException($msg);
-        }
-        $curlClient = $this->service->getClient()->getHttpClient();
-        return $curlClient->requestHttp($this->service, $url, $params, $method);
     }
 }

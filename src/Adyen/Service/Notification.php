@@ -3,7 +3,7 @@
 namespace Adyen\Service;
 
 use Adyen\AdyenException;
-use Adyen\Client;
+use Adyen\APIConfiguration;
 use Adyen\Service;
 use Adyen\Service\ResourceModel\Notification\CreateNotificationConfiguration;
 use Adyen\Service\ResourceModel\Notification\DeleteNotificationConfigurations;
@@ -47,12 +47,12 @@ class Notification extends Service
 
     /**
      * Notification constructor.
-     * @param Client $client
+     * @param APIConfiguration $APIConfiguration
      * @throws AdyenException
      */
-    public function __construct(Client $client)
+    public function __construct(APIConfiguration $APIConfiguration)
     {
-        parent::__construct($client);
+        parent::__construct($APIConfiguration);
 
         $this->createNotificationConfiguration = new CreateNotificationConfiguration($this);
         $this->updateNotificationConfiguration = new UpdateNotificationConfiguration($this);

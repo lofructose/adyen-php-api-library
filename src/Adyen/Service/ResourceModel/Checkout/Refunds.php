@@ -25,7 +25,7 @@ class Refunds extends \Adyen\Service\AbstractCheckoutResource
     public function __construct($service)
     {
         $this->endpoint = $this->getCheckoutEndpoint($service) .
-            '/' . $service->getClient()->getApiCheckoutVersion() . '/payments/{paymentPspReference}/refunds';
+            '/' . $service->getConfiguration()->getApiCheckoutVersion() . '/payments/{paymentPspReference}/refunds';
         parent::__construct($service, $this->endpoint, $this->allowApplicationInfo);
     }
 }

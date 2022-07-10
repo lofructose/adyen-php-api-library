@@ -25,7 +25,7 @@ class Sessions extends \Adyen\Service\AbstractCheckoutResource
     public function __construct($service)
     {
         $this->endpoint = $this->getCheckoutEndpoint($service) .
-            '/' . $service->getClient()->getApiCheckoutVersion() . '/sessions';
+            '/' . $service->getConfiguration()->getApiCheckoutVersion() . '/sessions';
         parent::__construct($service, $this->endpoint, $this->allowApplicationInfo);
     }
 }

@@ -25,7 +25,7 @@ class Cancels extends \Adyen\Service\AbstractCheckoutResource
     public function __construct($service)
     {
         $this->endpoint = $this->getCheckoutEndpoint($service) .
-            '/' . $service->getClient()->getApiCheckoutVersion() . '/payments/{paymentPspReference}/cancels';
+            '/' . $service->getConfiguration()->getApiCheckoutVersion() . '/payments/{paymentPspReference}/cancels';
         parent::__construct($service, $this->endpoint, $this->allowApplicationInfo);
     }
 }

@@ -16,12 +16,12 @@ class Hop extends \Adyen\Service
 
     /**
      * Hop constructor.
-     * @param \Adyen\Client $client
+     * @param \Adyen\APIConfiguration $APIConfiguration
      * @throws \Adyen\AdyenException
      */
-    public function __construct(\Adyen\Client $client)
+    public function __construct(\Adyen\APIConfiguration $APIConfiguration)
     {
-        parent::__construct($client);
+        parent::__construct($APIConfiguration);
 
         $this->getOnboardingUrl = new \Adyen\Service\ResourceModel\Hop\GetOnboardingUrl($this);
         $this->getPciQuestionnaireUrl = new \Adyen\Service\ResourceModel\Hop\GetPciQuestionnaireUrl($this);

@@ -12,12 +12,12 @@ class RiskManagement extends \Adyen\Service
     /**
      * RiskManagement constructor.
      *
-     * @param \Adyen\Client $client
+     * @param \Adyen\APIConfiguration $APIConfiguration
      * @throws \Adyen\AdyenException
      */
-    public function __construct(\Adyen\Client $client)
+    public function __construct(\Adyen\APIConfiguration $APIConfiguration)
     {
-        parent::__construct($client);
+        parent::__construct($APIConfiguration);
         $this->submitReferrals = new \Adyen\Service\ResourceModel\RiskManagement\SubmitReferrals($this);
     }
 

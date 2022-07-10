@@ -16,8 +16,8 @@ class DeclineThirdParty extends \Adyen\Service\AbstractResource
      */
     public function __construct($service)
     {
-        $this->endpoint = $service->getClient()->getConfig()->get('endpoint') .
-            '/pal/servlet/Payout/' . $service->getClient()->getApiPayoutVersion() . '/declineThirdParty';
+        $this->endpoint = $service->getConfiguration()->getConfig()->get('endpoint') .
+            '/pal/servlet/Payout/' . $service->getConfiguration()->getApiPayoutVersion() . '/declineThirdParty';
         parent::__construct($service, $this->endpoint);
     }
 }

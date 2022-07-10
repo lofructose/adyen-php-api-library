@@ -23,7 +23,7 @@ class PaymentLinks extends \Adyen\Service\AbstractCheckoutResource
     public function __construct($service)
     {
         $this->endpoint = $this->getCheckoutEndpoint($service) .
-            '/' . $service->getClient()->getApiCheckoutVersion() . '/paymentLinks';
+            '/' . $service->getConfiguration()->getApiCheckoutVersion() . '/paymentLinks';
         parent::__construct($service, $this->endpoint, $this->allowApplicationInfo);
     }
 }

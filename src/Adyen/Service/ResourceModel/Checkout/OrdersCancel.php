@@ -18,7 +18,7 @@ class OrdersCancel extends \Adyen\Service\AbstractCheckoutResource
     public function __construct($service)
     {
         $this->endpoint = $this->getCheckoutEndpoint($service) .
-            '/' . $service->getClient()->getApiCheckoutVersion() . '/orders/cancel';
+            '/' . $service->getConfiguration()->getApiCheckoutVersion() . '/orders/cancel';
         parent::__construct($service, $this->endpoint);
     }
 }
