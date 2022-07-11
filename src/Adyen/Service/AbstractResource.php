@@ -107,7 +107,7 @@ abstract class AbstractResource
      */
     public function requestPost($params)
     {
-        // check if paramenters has a value
+        // check if parameters has a value
         if (!$params) {
             $msg = 'The parameters in the request are empty';
             $this->service->getConfiguration()->getLogger()->error($msg);
