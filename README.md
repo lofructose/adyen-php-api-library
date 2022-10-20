@@ -76,7 +76,7 @@ $client->setTimeout(30);
 $service = new \Adyen\Service\Checkout($client);
 
 $json = '{
-      "card": {
+      "paymentMethod": {
         "encryptedCardNumber": "test_4111111111111111",
         "encryptedExpiryMonth": "test_03",
         "encryptedExpiryYear": "test_2030",
